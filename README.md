@@ -200,14 +200,16 @@ All errors follow a consistent format:
 {
   "error": "Error message description"
 }
-Environment Variables
+
+##Environment Variables
 Variable	Description	Default
 PORT	Server port	5000
 MONGODB_URI	MongoDB connection string	mongodb://localhost:27017/lounge_management
 JWT_SECRET	Secret key for JWT	(required)
 JWT_EXPIRE	JWT expiration time	7d
 NODE_ENV	Environment mode	development
-Features Roadmap
+
+##Features Roadmap
 •	[ ] Email notifications for bookings
 •	[ ] File upload for lounge images
 •	[ ] Advanced search and filtering
@@ -217,8 +219,9 @@ Features Roadmap
 •	[ ] Multi-language support
 •	[ ] Export reports (PDF/Excel)
 •	[ ] Calendar integration
-Contributing
-1.	Fork the repository
+
+##Contributing
+1.	clone the repository https://github.com/oelimuyah/Hostify
 2.	Create a feature branch (git checkout -b feature/AmazingFeature)
 3.	Commit your changes (git commit -m 'Add some AmazingFeature')
 4.	Push to the branch (git push origin feature/AmazingFeature)
@@ -228,4 +231,5 @@ Acknowledgments
 •	MongoDB for the database
 •	JWT for authentication
 •	All contributors and supporters
+
 
