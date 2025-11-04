@@ -177,15 +177,7 @@ All errors follow a consistent format:
 }
 
 # Features Roadmap
-•	[ ] Email notifications for bookings
-•	[ ] File upload for lounge images
-•	[ ] Advanced search and filtering
-•	[ ] Booking reminders
-•	[ ] Loyalty program
-•	[ ] Real-time notifications (WebSockets)
-•	[ ] Multi-language support
-•	[ ] Export reports (PDF/Excel)
-•	[ ] Calendar integration
+Email notifications for bookings, File upload for lounge images, Advanced search and filtering, Booking reminders, Loyalty program, Real-time notifications (WebSockets), Multi-language support, Export reports (PDF/Excel), Calendar integration
 
 # Contributing
 1.	clone the repository https://github.com/oelimuyah/Hostify
@@ -196,6 +188,7 @@ All errors follow a consistent format:
 
 # Acknowledgments
 •	All Group 4 TechCrush Capstone BackEnd Dev.
+
 
 
 
