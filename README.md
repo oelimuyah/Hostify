@@ -2,15 +2,10 @@
 Hostify Backend API
 A comprehensive RESTful API for managing lounge bookings, customer feedback, orders, and more. Built with Node.js, Express, and MongoDB.
 
-# Prerequisites
-•	Node.js (v14 or higher)
-•	MongoDB (v4.4 or higher)
-•	npm package manager
-
 # Installation
 1.	Clone the repository
 git clone <https://github.com/oelimuyah/Hostify>
-cd lounge-management-backend
+cd Hostify
 2.	Install dependencies
 npm install
 3.	Set up environment variables
@@ -22,8 +17,7 @@ MONGODB_URI=mongodb://localhost:27017/lounge_management
 JWT_SECRET=your-super-secret-jwt-key-change-this
 
 4.	Start MongoDB
-Make sure MongoDB is running on your system:
-# For MongoDB installed locally mongodb
+Make sure MongoDB is running on your system: (For MongoDB installed locally mongodb)
 
 5.	Seed the database (optional)
 Populate the database with sample data:
@@ -213,6 +207,7 @@ All errors follow a consistent format:
 
 # Acknowledgments
 •	All Group 4 TechCrush Capstone BackEnd Dev.
+
 
 
 
