@@ -1,19 +1,12 @@
-// routes/analytics.js
-import express from 'express';
+// controllers/analyticsController.js
 import Lounge from '../models/Lounge.js';
 import Booking from '../models/Booking.js';
 import Order from '../models/Order.js';
 import Feedback from '../models/Feedback.js';
 import User from '../models/User.js';
-import { authenticate, authorizeAdmin } from '../middleware/auth.js';
-import { asyncHandler } from '../middleware/errorHandler.js';
 
-const router = express.Router();
-
-// @route   GET /api/analytics/dashboard
-// @desc    Get dashboard statistics
-// @access  Private (Admin)
-router.get('/dashboard', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// DASHBOARD ANALYTICS
+export const getDashboardAnalytics = async (req, res) => {
   // Total counts
   const totalLounges = await Lounge.countDocuments();
   const totalUsers = await User.countDocuments();
@@ -50,7 +43,7 @@ router.get('/dashboard', authenticate, authorizeAdmin, asyncHandler(async (req, 
     { $group: { _id: '$status', count: { $sum: 1 } } }
   ]);
 
-  // Popular lounges (most booked)
+  // Popular lounges
   const popularLounges = await Booking.aggregate([
     { $match: { status: { $in: ['confirmed', 'completed'] } } },
     { $group: { _id: '$loungeId', bookings: { $sum: 1 }, revenue: { $sum: '$totalPrice' } } },
@@ -67,7 +60,7 @@ router.get('/dashboard', authenticate, authorizeAdmin, asyncHandler(async (req, 
     { $unwind: '$lounge' }
   ]);
 
-  // Monthly revenue trend (last 6 months)
+  // Monthly revenue trend
   const sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
@@ -80,10 +73,7 @@ router.get('/dashboard', authenticate, authorizeAdmin, asyncHandler(async (req, 
     },
     {
       $group: {
-        _id: {
-          year: { $year: '$createdAt' },
-          month: { $month: '$createdAt' }
-        },
+        _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } },
         revenue: { $sum: '$totalPrice' },
         count: { $sum: 1 }
       }
@@ -107,27 +97,23 @@ router.get('/dashboard', authenticate, authorizeAdmin, asyncHandler(async (req, 
     monthlyRevenue,
     recentBookings
   });
-}));
+};
 
-// @route   GET /api/analytics/bookings
-// @desc    Get booking analytics
-// @access  Private (Admin)
-router.get('/bookings', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// BOOKINGS ANALYTICS
+export const getBookingAnalytics = async (req, res) => {
   const { startDate, endDate } = req.query;
 
   let dateFilter = {};
   if (startDate) dateFilter.$gte = new Date(startDate);
   if (endDate) dateFilter.$lte = new Date(endDate);
 
-  const query = Object.keys(dateFilter).length > 0 ? { createdAt: dateFilter } : {};
+  const query = Object.keys(dateFilter).length ? { createdAt: dateFilter } : {};
 
-  // Bookings by status
   const byStatus = await Booking.aggregate([
     { $match: query },
     { $group: { _id: '$status', count: { $sum: 1 }, revenue: { $sum: '$totalPrice' } } }
   ]);
 
-  // Bookings by lounge
   const byLounge = await Booking.aggregate([
     { $match: query },
     { $group: { _id: '$loungeId', count: { $sum: 1 }, revenue: { $sum: '$totalPrice' } } },
@@ -143,7 +129,6 @@ router.get('/bookings', authenticate, authorizeAdmin, asyncHandler(async (req, r
     { $sort: { count: -1 } }
   ]);
 
-  // Daily bookings trend
   const dailyTrend = await Booking.aggregate([
     { $match: query },
     {
@@ -156,17 +141,11 @@ router.get('/bookings', authenticate, authorizeAdmin, asyncHandler(async (req, r
     { $sort: { _id: 1 } }
   ]);
 
-  res.json({
-    byStatus,
-    byLounge,
-    dailyTrend
-  });
-}));
+  res.json({ byStatus, byLounge, dailyTrend });
+};
 
-// @route   GET /api/analytics/revenue
-// @desc    Get revenue analytics
-// @access  Private (Admin)
-router.get('/revenue', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// REVENUE ANALYTICS
+export const getRevenueAnalytics = async (req, res) => {
   const { year, month } = req.query;
 
   let dateFilter = {};
@@ -176,30 +155,14 @@ router.get('/revenue', authenticate, authorizeAdmin, asyncHandler(async (req, re
     dateFilter = { createdAt: { $gte: startDate, $lte: endDate } };
   }
 
-  // Booking revenue
   const bookingRevenue = await Booking.aggregate([
     { $match: { ...dateFilter, status: { $in: ['confirmed', 'completed'] } } },
-    {
-      $group: {
-        _id: null,
-        total: { $sum: '$totalPrice' },
-        count: { $sum: 1 },
-        avg: { $avg: '$totalPrice' }
-      }
-    }
+    { $group: { _id: null, total: { $sum: '$totalPrice' }, count: { $sum: 1 }, avg: { $avg: '$totalPrice' } } }
   ]);
 
-  // Order revenue
   const orderRevenue = await Order.aggregate([
     { $match: { ...dateFilter, status: { $in: ['delivered', 'ready'] } } },
-    {
-      $group: {
-        _id: null,
-        total: { $sum: '$totalAmount' },
-        count: { $sum: 1 },
-        avg: { $avg: '$totalAmount' }
-      }
-    }
+    { $group: { _id: null, total: { $sum: '$totalAmount' }, count: { $sum: 1 }, avg: { $avg: '$totalAmount' } } }
   ]);
 
   res.json({
@@ -207,19 +170,13 @@ router.get('/revenue', authenticate, authorizeAdmin, asyncHandler(async (req, re
     orderRevenue: orderRevenue[0] || { total: 0, count: 0, avg: 0 },
     combinedTotal: (bookingRevenue[0]?.total || 0) + (orderRevenue[0]?.total || 0)
   });
-}));
+};
 
-// @route   GET /api/analytics/customers
-// @desc    Get customer analytics
-// @access  Private (Admin)
-router.get('/customers', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
-  // Total customers
+// CUSTOMER ANALYTICS
+export const getCustomerAnalytics = async (req, res) => {
   const totalCustomers = await User.countDocuments({ role: 'customer' });
-
-  // Active customers (with bookings)
   const activeCustomers = await Booking.distinct('userId');
 
-  // Top customers by bookings
   const topCustomers = await Booking.aggregate([
     { $group: { _id: '$userId', bookings: { $sum: 1 }, spent: { $sum: '$totalPrice' } } },
     { $sort: { bookings: -1 } },
@@ -235,7 +192,6 @@ router.get('/customers', authenticate, authorizeAdmin, asyncHandler(async (req, 
     { $unwind: '$user' }
   ]);
 
-  // New customers this month
   const startOfMonth = new Date();
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
@@ -251,13 +207,10 @@ router.get('/customers', authenticate, authorizeAdmin, asyncHandler(async (req, 
     newCustomersThisMonth,
     topCustomers
   });
-}));
+};
 
-// @route   GET /api/analytics/feedback
-// @desc    Get feedback analytics
-// @access  Private (Admin)
-router.get('/feedback', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
-  // Average ratings
+// FEEDBACK ANALYTICS
+export const getFeedbackAnalytics = async (req, res) => {
   const avgRatings = await Feedback.aggregate([
     {
       $group: {
@@ -270,13 +223,11 @@ router.get('/feedback', authenticate, authorizeAdmin, asyncHandler(async (req, r
     }
   ]);
 
-  // Rating distribution
   const ratingDistribution = await Feedback.aggregate([
     { $group: { _id: '$rating', count: { $sum: 1 } } },
     { $sort: { _id: 1 } }
   ]);
 
-  // Feedback by lounge
   const byLounge = await Feedback.aggregate([
     {
       $group: {
@@ -297,7 +248,6 @@ router.get('/feedback', authenticate, authorizeAdmin, asyncHandler(async (req, r
     { $sort: { avgRating: -1 } }
   ]);
 
-  // Low Ratings (<=3)
   const lowRatings = await Feedback.find({ rating: { $lte: 3 } })
     .populate(['userId', 'loungeId'])
     .sort({ createdAt: -1 })
@@ -309,6 +259,4 @@ router.get('/feedback', authenticate, authorizeAdmin, asyncHandler(async (req, r
     byLounge,
     lowRatings
   });
-}));
-
-export default router;
+};

@@ -1,18 +1,10 @@
-// routes/menu.js
-import express from 'express';
+// controllers/menuController.js
 import MenuItem from '../models/MenuItem.js';
-import { authenticate, authorizeAdmin } from '../middleware/auth.js';
-import { createMenuItemValidator } from '../middleware/validation.js';
-import { asyncHandler } from '../middleware/errorHandler.js';
 
-const router = express.Router();
-
-// @route   GET /api/menu
-// @desc    Get all menu items
-// @access  Public
-router.get('/', asyncHandler(async (req, res) => {
+// @desc Get all menu items
+export const getAllMenuItems = async (req, res) => {
   const { category, available } = req.query;
-  
+
   let query = {};
   if (category) query.category = category;
   if (available !== undefined) query.available = available === 'true';
@@ -21,14 +13,12 @@ router.get('/', asyncHandler(async (req, res) => {
 
   res.json({
     count: menuItems.length,
-    menuItems
+    menuItems,
   });
-}));
+};
 
-// @route   GET /api/menu/:id
-// @desc    Get single menu item
-// @access  Public
-router.get('/:id', asyncHandler(async (req, res) => {
+// @desc Get a single menu item
+export const getMenuItemById = async (req, res) => {
   const menuItem = await MenuItem.findById(req.params.id);
 
   if (!menuItem) {
@@ -36,25 +26,21 @@ router.get('/:id', asyncHandler(async (req, res) => {
   }
 
   res.json(menuItem);
-}));
+};
 
-// @route   POST /api/menu
-// @desc    Create menu item
-// @access  Private (Admin)
-router.post('/', authenticate, authorizeAdmin, createMenuItemValidator, asyncHandler(async (req, res) => {
+// @desc Create a new menu item
+export const createMenuItem = async (req, res) => {
   const menuItem = new MenuItem(req.body);
   await menuItem.save();
 
   res.status(201).json({
     message: 'Menu item created successfully',
-    menuItem
+    menuItem,
   });
-}));
+};
 
-// @route   PUT /api/menu/:id
-// @desc    Update menu item
-// @access  Private (Admin)
-router.put('/:id', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// @desc Update a menu item
+export const updateMenuItem = async (req, res) => {
   const menuItem = await MenuItem.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -67,14 +53,12 @@ router.put('/:id', authenticate, authorizeAdmin, asyncHandler(async (req, res) =
 
   res.json({
     message: 'Menu item updated successfully',
-    menuItem
+    menuItem,
   });
-}));
+};
 
-// @route   DELETE /api/menu/:id
-// @desc    Delete menu item
-// @access  Private (Admin)
-router.delete('/:id', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// @desc Delete a menu item
+export const deleteMenuItem = async (req, res) => {
   const menuItem = await MenuItem.findById(req.params.id);
 
   if (!menuItem) {
@@ -84,6 +68,4 @@ router.delete('/:id', authenticate, authorizeAdmin, asyncHandler(async (req, res
   await menuItem.deleteOne();
 
   res.json({ message: 'Menu item deleted successfully' });
-}));
-
-export default router;
+};

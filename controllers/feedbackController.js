@@ -1,16 +1,8 @@
-// routes/feedback.js
-import express from 'express';
+// controllers/feedbackController.js
 import Feedback from '../models/Feedback.js';
-import { authenticate, authorizeAdmin } from '../middleware/auth.js';
-import { createFeedbackValidator } from '../middleware/validation.js';
-import { asyncHandler } from '../middleware/errorHandler.js';
 
-const router = express.Router();
-
-// @route   POST /api/feedback
-// @desc    Submit feedback
-// @access  Private
-router.post('/', authenticate, createFeedbackValidator, asyncHandler(async (req, res) => {
+// @desc Submit feedback
+export const submitFeedback = async (req, res) => {
   const { loungeId, bookingId, rating, serviceRating, cleanlinessRating, comment } = req.body;
 
   const feedback = new Feedback({
@@ -20,7 +12,7 @@ router.post('/', authenticate, createFeedbackValidator, asyncHandler(async (req,
     rating,
     serviceRating,
     cleanlinessRating,
-    comment
+    comment,
   });
 
   await feedback.save();
@@ -28,29 +20,29 @@ router.post('/', authenticate, createFeedbackValidator, asyncHandler(async (req,
 
   res.status(201).json({
     message: 'Feedback submitted successfully',
-    feedback
+    feedback,
   });
-}));
+};
 
-// @route   GET /api/feedback/lounge/:loungeId
-// @desc    Get feedback for a specific lounge
-// @access  Public
-router.get('/lounge/:loungeId', asyncHandler(async (req, res) => {
+// @desc Get feedback for a specific lounge
+export const getFeedbackForLounge = async (req, res) => {
   const feedback = await Feedback.find({ loungeId: req.params.loungeId })
     .populate('userId', 'name')
     .sort({ createdAt: -1 });
 
   // Calculate average ratings
-  const avgRating = feedback.length > 0
+  const avgRating = feedback.length
     ? feedback.reduce((sum, f) => sum + f.rating, 0) / feedback.length
     : 0;
 
-  const avgServiceRating = feedback.filter(f => f.serviceRating).length > 0
-    ? feedback.filter(f => f.serviceRating).reduce((sum, f) => sum + f.serviceRating, 0) / feedback.filter(f => f.serviceRating).length
+  const avgServiceRating = feedback.filter(f => f.serviceRating).length
+    ? feedback.filter(f => f.serviceRating)
+        .reduce((sum, f) => sum + f.serviceRating, 0) / feedback.filter(f => f.serviceRating).length
     : 0;
 
-  const avgCleanlinessRating = feedback.filter(f => f.cleanlinessRating).length > 0
-    ? feedback.filter(f => f.cleanlinessRating).reduce((sum, f) => sum + f.cleanlinessRating, 0) / feedback.filter(f => f.cleanlinessRating).length
+  const avgCleanlinessRating = feedback.filter(f => f.cleanlinessRating).length
+    ? feedback.filter(f => f.cleanlinessRating)
+        .reduce((sum, f) => sum + f.cleanlinessRating, 0) / feedback.filter(f => f.cleanlinessRating).length
     : 0;
 
   res.json({
@@ -59,33 +51,28 @@ router.get('/lounge/:loungeId', asyncHandler(async (req, res) => {
       totalFeedback: feedback.length,
       avgRating: parseFloat(avgRating.toFixed(2)),
       avgServiceRating: parseFloat(avgServiceRating.toFixed(2)),
-      avgCleanlinessRating: parseFloat(avgCleanlinessRating.toFixed(2))
-    }
+      avgCleanlinessRating: parseFloat(avgCleanlinessRating.toFixed(2)),
+    },
   });
-}));
+};
 
-// @route   GET /api/feedback/my-feedback
-// @desc    Get current user's feedback
-// @access  Private
-router.get('/my-feedback', authenticate, asyncHandler(async (req, res) => {
+// @desc Get current user's feedback
+export const getMyFeedback = async (req, res) => {
   const feedback = await Feedback.find({ userId: req.user._id })
     .populate('loungeId')
     .sort({ createdAt: -1 });
 
   res.json({
     count: feedback.length,
-    feedback
+    feedback,
   });
-}));
+};
 
-// @route   GET /api/feedback
-// @desc    Get all feedback (Admin only)
-// @access  Private (Admin)
-router.get('/', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// @desc Get all feedback (Admin only)
+export const getAllFeedback = async (req, res) => {
   const { rating, hasResponse } = req.query;
-  
   let query = {};
-  
+
   if (rating) query.rating = parseInt(rating);
   if (hasResponse === 'true') query.response = { $exists: true, $ne: null };
   if (hasResponse === 'false') query.response = { $exists: false };
@@ -96,14 +83,12 @@ router.get('/', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
 
   res.json({
     count: feedback.length,
-    feedback
+    feedback,
   });
-}));
+};
 
-// @route   PATCH /api/feedback/:id/respond
-// @desc    Respond to feedback (Admin only)
-// @access  Private (Admin)
-router.patch('/:id/respond', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// @desc Respond to feedback (Admin only)
+export const respondToFeedback = async (req, res) => {
   const { response } = req.body;
 
   if (!response) {
@@ -112,9 +97,9 @@ router.patch('/:id/respond', authenticate, authorizeAdmin, asyncHandler(async (r
 
   const feedback = await Feedback.findByIdAndUpdate(
     req.params.id,
-    { 
+    {
       response,
-      respondedAt: new Date()
+      respondedAt: new Date(),
     },
     { new: true }
   ).populate(['userId', 'loungeId']);
@@ -125,14 +110,12 @@ router.patch('/:id/respond', authenticate, authorizeAdmin, asyncHandler(async (r
 
   res.json({
     message: 'Response added successfully',
-    feedback
+    feedback,
   });
-}));
+};
 
-// @route   DELETE /api/feedback/:id
-// @desc    Delete feedback
-// @access  Private (Admin only)
-router.delete('/:id', authenticate, authorizeAdmin, asyncHandler(async (req, res) => {
+// @desc Delete feedback (Admin only)
+export const deleteFeedback = async (req, res) => {
   const feedback = await Feedback.findById(req.params.id);
 
   if (!feedback) {
@@ -142,6 +125,4 @@ router.delete('/:id', authenticate, authorizeAdmin, asyncHandler(async (req, res
   await feedback.deleteOne();
 
   res.json({ message: 'Feedback deleted successfully' });
-}));
-
-export default router;
+};

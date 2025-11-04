@@ -10,13 +10,13 @@ dotenv.config();
 import './config/database.js';
 
 // Import routes
-import authRoutes from './routes/auth.js';
-import loungeRoutes from './routes/lounges.js';
-import bookingRoutes from './routes/bookings.js';
-import feedbackRoutes from './routes/feedback.js';
-import orderRoutes from './routes/orders.js';
-import menuRoutes from './routes/menu.js';
-import analyticsRoutes from './routes/analytics.js';
+import authRoutes from './routes/authRoutes.js';
+import loungeRoutes from './routes/loungesRoutes.js';
+import bookingRoutes from './routes/bookingsRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
+import orderRoutes from './routes/ordersRoutes.js';
+import menuRoutes from './routes/menuRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
 
 // Import middleware
 import { errorHandler, notFound } from './middleware/errorHandler.js';
