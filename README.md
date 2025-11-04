@@ -187,7 +187,8 @@ Email notifications for bookings, File upload for lounge images, Advanced search
 5.	Open a Pull Request
 
 # Acknowledgments
-•	All Group 4 TechCrush Capstone BackEnd Dev.
+•	All Group 8 TechCrush Capstone BackEnd Dev.
+
 
 
 
