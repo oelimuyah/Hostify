@@ -2,17 +2,6 @@
 Hostify Backend API
 A comprehensive RESTful API for managing lounge bookings, customer feedback, orders, and more. Built with Node.js, Express, and MongoDB.
 
-# Features
-•	User Authentication & Authorization: Secure JWT-based authentication with role-based access control (Admin, Staff, Customer)
-•	Lounge Management: Full CRUD operations for lounge spaces with real-time availability checking
-•	Booking System: Advanced booking management with conflict detection and status tracking
-•	Customer Feedback: Rating and review system for lounges with response capabilities
-•	Order Management: Food and beverage ordering system with status tracking
-•	Menu Management: Dynamic menu with categories and availability controls
-•	Analytics Dashboard: Admin dashboard with key metrics and statistics
-•	Security: Rate limiting, input validation, helmet security headers, password hashing
-•	Data Validation: Comprehensive input validation using express-validator
-
 # Prerequisites
 •	Node.js (v14 or higher)
 •	MongoDB (v4.4 or higher)
@@ -38,15 +27,17 @@ Make sure MongoDB is running on your system:
 
 5.	Seed the database (optional)
 Populate the database with sample data:
-node seed.js
-6.	Start the server
+node utils/seed.js
+
+7.	Start the server
 # Development mode with auto-reload
 npm run dev
 
 # Production mode
 npm start
 The server will start on http://localhost:5000
- API Documentation
+
+# API Documentation
 Base URL
 http://localhost:5000/api
 Authentication
@@ -86,7 +77,7 @@ Orders
 Analytics
 •	GET /api/analytics/dashboard - Get dashboard statistics (Admin)
 
-For detailed API documentation, see API_DOCS.md
+
 User Roles
 Customer
 •	View lounges and availability
@@ -202,14 +193,6 @@ All errors follow a consistent format:
   "error": "Error message description"
 }
 
-# Environment Variables
-Variable	Description	Default
-PORT	Server port	5000
-MONGODB_URI	MongoDB connection string	mongodb://localhost:27017/lounge_management
-JWT_SECRET	Secret key for JWT	(required)
-JWT_EXPIRE	JWT expiration time	7d
-NODE_ENV	Environment mode	development
-
 # Features Roadmap
 •	[ ] Email notifications for bookings
 •	[ ] File upload for lounge images
@@ -229,10 +212,8 @@ NODE_ENV	Environment mode	development
 5.	Open a Pull Request
 
 # Acknowledgments
-•	Express.js for the web framework
-•	MongoDB for the database
-•	JWT for authentication
-•	All Group 4 BackEnd Dev.
+•	All Group 4 TechCrush Capstone BackEnd Dev.
+
 
 
 
