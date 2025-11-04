@@ -102,9 +102,9 @@ Customer: Email: john@example.com [Password: User****]
 
 Example API Calls
 Register a new user:
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
+POST http://localhost:5000/api/auth/register
+"Content-Type: application/json"
+'{
     "name": "Test User",
     "email": "test@example.com",
     "password": "Password****",
@@ -113,7 +113,8 @@ curl -X POST http://localhost:5000/api/auth/register \
 Login:
 POST http://localhost:5000/api/auth/login
 "Content-Type: application/json"
-'{  "email": "admin@lounge.com",
+'{  
+    "email": "admin@lounge.com",
     "password": "Admin****"
   }'
 
@@ -196,6 +197,7 @@ All errors follow a consistent format:
 
 # Acknowledgments
 •	All Group 4 TechCrush Capstone BackEnd Dev.
+
 
 
 
