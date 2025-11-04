@@ -1,5 +1,4 @@
-﻿# HostifyBackEnd-Modalities
-Hostify Backend API
+﻿# Hostify Backend API
 A comprehensive RESTful API for managing lounge bookings, customer feedback, orders, and more. Built with Node.js, Express, and MongoDB.
 
 # Installation
@@ -197,6 +196,7 @@ All errors follow a consistent format:
 
 # Acknowledgments
 •	All Group 4 TechCrush Capstone BackEnd Dev.
+
 
 
 
