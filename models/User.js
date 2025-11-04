@@ -4,22 +4,22 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Name is required'],
+    required: true,
     trim: true,
-    minlength: [2, 'Name must be at least 2 characters']
+    minlength: 2,
   },
   email: {
     type: String,
-    required: [true, 'Email is required'],
+    required: true,
     unique: true,
     lowercase: true,
     trim: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email']
+    match: /^\S+@\S+\.\S+$/,
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
-    minlength: [8, 'Password must be at least 8 characters']
+    required: true,
+    minlength: 8,
   },
   phone: {
     type: String,
@@ -69,6 +69,4 @@ userSchema.statics.findActive = function() {
   return this.find({ isActive: true });
 };
 
-const User = mongoose.model('User', userSchema);
-
-export default User;
+export default mongoose.model('User', userSchema);

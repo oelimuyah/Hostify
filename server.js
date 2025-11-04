@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import database connection
-import './config/database.js';
+import connectDB from './config/database.js';
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
@@ -71,9 +71,19 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB(); // <-- waits for MongoDB connection
+    const PORT = process.env.PORT || 5000;
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+  }
+};
+
+startServer();
 
 export default app;
