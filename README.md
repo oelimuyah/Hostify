@@ -23,25 +23,22 @@ Make sure MongoDB is running on your system: (For MongoDB installed locally mong
 Populate the database with sample data:
 node utils/seed.js
 
-7.	Start the server
-# Development mode with auto-reload
+7.	Start the server [Development mode with auto-reload]
 npm run dev
 
 # Production mode
-npm start
-The server will start on http://localhost:5000
+npm start [The server will start on http://localhost:5000]
 
 # API Documentation
-Base URL
-http://localhost:5000/api
+Base URL: http://localhost:5000/api
 Authentication
-Most endpoints require authentication. Include the JWT token in the Authorization header:
-Authorization: Bearer <your-jwt-token>
-Available Endpoints
+Most endpoints require authentication. Include the JWT token in the Authorization header: Authorization: Bearer <your-jwt-token>
+
 Authentication
 •	POST /api/auth/register - Register new user
 •	POST /api/auth/login - Login user
 •	GET /api/auth/me - Get current user profile
+
 Lounges
 •	GET /api/lounges - Get all lounges (with filters)
 •	GET /api/lounges/:id - Get single lounge
@@ -49,28 +46,32 @@ Lounges
 •	PUT /api/lounges/:id - Update lounge (Admin)
 •	DELETE /api/lounges/:id - Delete lounge (Admin)
 •	POST /api/lounges/:id/check-availability - Check availability
+
 Bookings
 •	POST /api/bookings - Create booking
 •	GET /api/bookings/my-bookings - Get user's bookings
 •	GET /api/bookings - Get all bookings (Admin)
 •	PATCH /api/bookings/:id/status - Update booking status
+
 Feedback
 •	POST /api/feedback - Submit feedback
 •	GET /api/feedback/lounge/:loungeId - Get lounge feedback
 •	GET /api/feedback - Get all feedback (Admin)
 •	PATCH /api/feedback/:id/respond - Respond to feedback (Admin)
+
 Menu
 •	GET /api/menu - Get menu items
 •	POST /api/menu - Create menu item (Admin)
 •	PUT /api/menu/:id - Update menu item (Admin)
+
 Orders
 •	POST /api/orders - Create order
 •	GET /api/orders/my-orders - Get user's orders
 •	GET /api/orders - Get all orders (Admin/Staff)
 •	PATCH /api/orders/:id/status - Update order status (Admin/Staff)
+
 Analytics
 •	GET /api/analytics/dashboard - Get dashboard statistics (Admin)
-
 
 User Roles
 Customer
@@ -95,17 +96,9 @@ Admin
 
 # Testing
 Test Credentials (After seeding)
-Admin:
-Email: admin@lounge.com
-Password: Admin****
-
-Staff:
-Email: staff@lounge.com
-Password: Staff****
-
-Customer:
-Email: john@example.com
-Password: User****
+Admin: Email: admin@lounge.com [Password: Admin****]
+Staff: Email: staff@lounge.com [Password: Staff****]
+Customer: Email: john@example.com [Password: User****]
 
 Example API Calls
 Register a new user:
@@ -118,27 +111,26 @@ curl -X POST http://localhost:5000/api/auth/register \
     "phone": "+1234567890"
   }'
 Login:
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "admin@lounge.com",
+POST http://localhost:5000/api/auth/login
+"Content-Type: application/json"
+'{  "email": "admin@lounge.com",
     "password": "Admin****"
   }'
 
 Get all lounges:
-curl -X GET http://localhost:5000/api/lounges
+GET http://localhost:5000/api/lounges
 Create a booking (requires authentication):
-curl -X POST http://localhost:5000/api/bookings \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "loungeId": "LOUNGE_ID",
+POST http://localhost:5000/api/bookings
+"Content-Type: application/json"
+"Authorization: Bearer YOUR_JWT_TOKEN"
+'{"loungeId": "LOUNGE_ID",
     "startTime": "2025-10-25T14:00:00Z",
     "endTime": "2025-10-25T18:00:00Z",
     "numberOfGuests": 10,
     "specialRequests": "Need projector"
   }'
- Project Structure
+  
+# Project Structure
 lounge-management-backend/
 ├── server.js              # Main application file
 ├── middleware.js          # Custom middleware and validators
@@ -148,7 +140,8 @@ lounge-management-backend/
 ├── .env.example          # Environment variables template
 ├── README.md             # This file
 └── API_DOCS.md          # Detailed API documentation
- Security Features
+
+# Security Features
 •	Password Hashing: Passwords are hashed using bcryptjs before storage
 •	JWT Authentication: Stateless authentication using JSON Web Tokens
 •	Rate Limiting: Prevents brute force attacks (100 requests per 15 minutes)
@@ -156,24 +149,20 @@ lounge-management-backend/
 •	Helmet: Security headers to protect against common vulnerabilities
 •	CORS: Configurable Cross-Origin Resource Sharing
 •	Role-Based Access Control: Different permissions for different user roles
-Database Schema
-User
-•	name, email, password (hashed), phone, role, createdAt
-Lounge
-•	name, description, capacity, pricePerHour, amenities, images, status, createdAt
-Booking
-•	userId, loungeId, startTime, endTime, numberOfGuests, totalPrice, status, specialRequests, createdAt
-Feedback
-•	userId, loungeId, bookingId, rating, serviceRating, cleanlinessRating, comment, response, createdAt
-Order
-•	userId, bookingId, loungeId, items[], totalAmount, status, specialInstructions, createdAt
-MenuItem
-•	name, description, category, price, available, image, createdAt
-API Status Codes
+
+# Database Schema
+User[name, email, password (hashed), phone, role, createdAt]
+Lounge [name, description, capacity, pricePerHour, amenities, images, status, createdAt]
+Booking [userId, loungeId, startTime, endTime, numberOfGuests, totalPrice, status, specialRequests, createdAt]
+Feedback [userId, loungeId, bookingId, rating, serviceRating, cleanlinessRating, comment, response, createdAt]
+Order [userId, bookingId, loungeId, items[], totalAmount, status, specialInstructions, createdAt]
+MenuItem [name, description, category, price, available, image, createdAt]
+
+# API Status Codes
 •	200 - Success •	201 - Created •	400 - Bad Request / Validation Error •	401 - Unauthorized / Authentication Required
 •	403 - Forbidden / Insufficient Permissions •	404 - Not Found •	429 - Too Many Requests •	500 - Internal Server Error
 
-Booking Status Flow
+# Booking Status Flow
 pending → confirmed → completed
          ↓
       cancelled
@@ -207,6 +196,7 @@ All errors follow a consistent format:
 
 # Acknowledgments
 •	All Group 4 TechCrush Capstone BackEnd Dev.
+
 
 
 
