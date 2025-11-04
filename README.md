@@ -1,7 +1,8 @@
 ﻿# HostifyBackEnd-Modalities
 Hostify Backend API
 A comprehensive RESTful API for managing lounge bookings, customer feedback, orders, and more. Built with Node.js, Express, and MongoDB.
-Features
+
+# Features
 •	User Authentication & Authorization: Secure JWT-based authentication with role-based access control (Admin, Staff, Customer)
 •	Lounge Management: Full CRUD operations for lounge spaces with real-time availability checking
 •	Booking System: Advanced booking management with conflict detection and status tracking
@@ -11,13 +12,15 @@ Features
 •	Analytics Dashboard: Admin dashboard with key metrics and statistics
 •	Security: Rate limiting, input validation, helmet security headers, password hashing
 •	Data Validation: Comprehensive input validation using express-validator
-Prerequisites
+
+# Prerequisites
 •	Node.js (v14 or higher)
 •	MongoDB (v4.4 or higher)
 •	npm package manager
- Installation
+
+# Installation
 1.	Clone the repository
-git clone <repository-url>
+git clone <https://github.com/oelimuyah/Hostify>
 cd lounge-management-backend
 2.	Install dependencies
 npm install
@@ -82,6 +85,7 @@ Orders
 •	PATCH /api/orders/:id/status - Update order status (Admin/Staff)
 Analytics
 •	GET /api/analytics/dashboard - Get dashboard statistics (Admin)
+
 For detailed API documentation, see API_DOCS.md
 User Roles
 Customer
@@ -103,7 +107,8 @@ Admin
 •	View all feedback and respond
 •	Access analytics dashboard
 •	Manage users
-Testing
+
+# Testing
 Test Credentials (After seeding)
 Admin:
 Email: admin@lounge.com
@@ -116,6 +121,7 @@ Password: Staff****
 Customer:
 Email: john@example.com
 Password: User****
+
 Example API Calls
 Register a new user:
 curl -X POST http://localhost:5000/api/auth/register \
@@ -179,14 +185,9 @@ Order
 MenuItem
 •	name, description, category, price, available, image, createdAt
 API Status Codes
-•	200 - Success
-•	201 - Created
-•	400 - Bad Request / Validation Error
-•	401 - Unauthorized / Authentication Required
-•	403 - Forbidden / Insufficient Permissions
-•	404 - Not Found
-•	429 - Too Many Requests
-•	500 - Internal Server Error
+•	200 - Success •	201 - Created •	400 - Bad Request / Validation Error •	401 - Unauthorized / Authentication Required
+•	403 - Forbidden / Insufficient Permissions •	404 - Not Found •	429 - Too Many Requests •	500 - Internal Server Error
+
 Booking Status Flow
 pending → confirmed → completed
          ↓
@@ -201,7 +202,7 @@ All errors follow a consistent format:
   "error": "Error message description"
 }
 
-##Environment Variables
+# Environment Variables
 Variable	Description	Default
 PORT	Server port	5000
 MONGODB_URI	MongoDB connection string	mongodb://localhost:27017/lounge_management
@@ -209,7 +210,7 @@ JWT_SECRET	Secret key for JWT	(required)
 JWT_EXPIRE	JWT expiration time	7d
 NODE_ENV	Environment mode	development
 
-##Features Roadmap
+# Features Roadmap
 •	[ ] Email notifications for bookings
 •	[ ] File upload for lounge images
 •	[ ] Advanced search and filtering
@@ -220,16 +221,18 @@ NODE_ENV	Environment mode	development
 •	[ ] Export reports (PDF/Excel)
 •	[ ] Calendar integration
 
-##Contributing
+# Contributing
 1.	clone the repository https://github.com/oelimuyah/Hostify
 2.	Create a feature branch (git checkout -b feature/AmazingFeature)
 3.	Commit your changes (git commit -m 'Add some AmazingFeature')
 4.	Push to the branch (git push origin feature/AmazingFeature)
 5.	Open a Pull Request
-Acknowledgments
+
+# Acknowledgments
 •	Express.js for the web framework
 •	MongoDB for the database
 •	JWT for authentication
-•	All contributors and supporters
+•	All Group 4 BackEnd Dev.
+
 
 
